@@ -8,4 +8,4 @@ We build a conversational agent which knowledge base is an online forum for pare
 
 ## How to use
 
-The jupyter notebook file details the process to build the chatbot. The `README` file in the Chatbot folder details how to launch the Django-based interface to chat with the Chatbot. **However**, pickle files are needed for it to run, that are too large to put on GitHub. Please contact the author to get them.
+The jupyter notebook file details the process to build the chatbot. The `README` file in the Chatbot folder details how to launch the Django-based interface to chat with the Chatbot. **However**, pickle files are needed for it to run, that are too large to put on GitHub. Please contact the author to get them. You will also need the word2vec model `GoogleNews-vectors-negative300.bin`.
