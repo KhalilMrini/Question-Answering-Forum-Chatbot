@@ -4,7 +4,7 @@
 
 ## Abstract
 
-We build a conversational agent which knowledge base is an online forum for parents of autistic children. We col- lect about 35,000 threads totalling some 600,000 replies, and label 1% of them for usefulness using Amazon Mechanical Turk. We train a Random Forest Clas- sifier using sent2vec features to label the remaining thread replies. Then, we use word2vec to match user queries conceptu- ally with a thread, and then a reply with a predefined context window.
+We build a conversational agent which knowledge base is an online forum for parents of autistic children. We collect about 35,000 threads totalling some 600,000 replies, and label 1% of them for usefulness using Amazon Mechanical Turk. We train a Random Forest Classifier using sent2vec features to label the remaining thread replies. Then, we use word2vec to match user queries conceptually with a thread, and then a reply with a predefined context window.
 
 ## How to use
 
