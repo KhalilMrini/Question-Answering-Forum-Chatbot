@@ -2,7 +2,7 @@
 
 [Khalil Mrini](https://www.linkedin.com/in/khalilmrini/), [Marc Laperrouza](https://people.epfl.ch/marc.laperrouza/bio?lang=en&cvlang=en), [Pierre Dillenbourg](https://people.epfl.ch/cgi-bin/people?id=155704&op=bio&lang=en&cvlang=en)
 
-Best Presentation Award at SwissText 2018 (Winterthur, Switzerland): Paper, [Presentation](https://www.youtube.com/watch?v=ht03dVRmYmQ).
+Best Presentation Award at SwissText 2018 (Winterthur, Switzerland): [Paper](https://infoscience.epfl.ch/record/256467?&ln=en), [Presentation](https://www.youtube.com/watch?v=ht03dVRmYmQ).
 
 ## Abstract
 
