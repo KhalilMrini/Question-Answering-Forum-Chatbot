@@ -1,0 +1,210 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+        <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+
+        <link href="{% static 'font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <base target="_blank"/>
+        <title>Question-Answering Forum Chatbot</title>
+
+    </head>
+    <body>
+        <!-- Wrap all page content here -->
+        <div class="container">
+          <header class="masthead mb-auto">
+              <div class="row align-items-end">
+                <div class="col-md-6">
+                  <h2 class="masthead-brand">Question-Answering Forum Chatbot</h2>
+                </div>
+                <div class="col-md-2">
+                  <br/>
+                  <h4>by <a href="http://KhalilMrini.github.io/">Khalil Mrini</a></h4>
+                </div>
+                <div class="col-md-1">
+                  <br/>
+                  <h4><a href="https://infoscience.epfl.ch/record/256467?&ln=en">Paper</a></h4>
+                </div>
+                <div class="col-md-1">
+                  <br/>
+                  <h4><a href="https://github.com/KhalilMrini/Question-Answering-Forum-Chatbot">Code</a></h4>
+                </div>
+                <div class="col-md-2">
+                  <br/>
+                  <h4><a href="https://www.youtube.com/watch?v=ht03dVRmYmQ">Video Presentation</a></h4>
+                </div>
+              </div>
+              <div class="row align-items-center">
+                <b>This Chatbot is trained on an <a href="https://wrongplanet.net/forums/">online forum</a> for parents of children with <a href="https://en.wikipedia.org/wiki/Autism">Autism</a>.</b>
+                <br/>
+                <b>Ask the Chatbot questions, and give it a few explanations afterwards if you so wish.</b>
+                <br/>
+                <b>The Chatbot tries to answer in {{ max_sentences }} sentence(s), but you can ask it "Answer me in X sentences" to change that parameter.</b>
+              </div>
+          </header>
+          <div class="row">
+
+            <div id="wrap" class="BotMainDiv" ng-controller="ChatCtrl">
+                <!-- Begin page content -->
+                <div class="container-fluid" id="body-container" style="border-bottom: #eee 1px solid; padding-top: 100px;">
+
+                    <div  id="sub-body-container">
+
+                        <div  id="messages-container" style=" ">
+
+                        </div>
+                        <div class="error-notification alert alert-info" style="display:none;"></div>
+
+
+                    </div>
+                </div>
+
+                <div class="navbar navbar-default navbar-fixed-bottom non-error" style="padding:10px;">
+                    <div class="container-fluid botAccentColor" id="bottom-box">
+
+                        <div class="row" id="send-box">
+
+                            <div id="messageToSend" contenteditable="true" class="pull-left" data-ph="Type your message..."></div>
+
+
+                            <div class="pull-right send-button-div">
+                                <button  id="messageSendButton" type="button" onclick="sendTextMessage()">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+          </div>
+        </div>
+
+        <script type="text/javascript">
+            // Standard javascript code for csrf cookies
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            var csrftoken = getCookie('csrftoken');
+                // });
+
+            function csrfSafeMethod(method) {
+                // these HTTP methods do not require CSRF protection
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            function sameOrigin(url) {
+                // test that a given url is a same-origin URL
+                // url could be relative or scheme relative or absolute
+                var host = document.location.host; // host + port
+                var protocol = document.location.protocol;
+                var sr_origin = '//' + host;
+                var origin = protocol + sr_origin;
+                // Allow absolute or scheme relative URLs to same origin
+                return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                    (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                    // or any other URL that isn't scheme relative or absolute i.e relative.
+                    !(/^(\/\/|http:|https:).*/.test(url));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                        // Send the token to same-origin, relative URLs only.
+                        // Send the token only if the method warrants CSRF protection
+                        // Using the CSRFToken value acquired earlier
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+            }
+        });
+
+        </script>
+
+        <script src="{% static 'js/reconnecting-websocket.min.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static 'js/internal-chatbox.js' %}" type="text/javascript" charset="utf-8"></script>
+
+        <script type="text/javascript">
+
+            // START WEBSOCKETS
+            var supportsWebSockets = ('WebSocket' in window || 'MozWebSocket' in window) && WebSocket;
+            if(!supportsWebSockets){
+                $(".very-old-browser-notification").show();
+                $(".non-error").hide();
+            }else{
+                $(".very-old-browser-notification").hide();
+                $(".non-error").show();
+            }
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+
+            // Calls the websocket connect channel
+            var chatsock = new ReconnectingWebSocket(ws_scheme + '://' + window.location.host + "/chat/stream/test-chat");
+
+
+            $("#messageToSend").keypress(function (e) {
+                var key = e.which;
+                if (key == 13)  // trigger message send when 'enter' key is clicked
+                {
+                    $('#messageSendButton').trigger('click');
+                    return false;
+                }
+            });
+
+            // Code that is called when the socket is succesfully opened
+            chatsock.onopen = function(message) {
+
+                $('.error-notification').hide();
+                $('.non-error').show();
+                $('#messages-container').html('<div  class="empty-div"></div>');
+                message = {}
+                message.command= 'start'
+                chatsock.send(JSON.stringify(message)); // START TALKING!
+            }
+            chatsock.onmessage = function(message){
+                processAndDisplayChatMessage(message);
+            };
+
+            chatsock.onclose = function(message){
+                console.log("connection lost ... ");
+            }
+
+            chatsock.onerror = function(message){
+                console.log("Error reconnecting ... ");
+                $('.error-notification').html("Unable to connect to the yomamabot server. Please try again in a few minutes (by refreshing the page).")
+                $('.error-notification').show();
+                $('.non-error').hide();
+                $("#body-container").scrollTop( $('#body-container')[0].scrollHeight );
+            }
+
+            $(document).ready(function() {
+                $("#body-container").scrollTop( $('#body-container')[0].scrollHeight );
+            });
+
+
+        </script>
+
+</body>
+</html>
