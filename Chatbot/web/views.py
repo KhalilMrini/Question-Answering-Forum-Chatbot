@@ -148,7 +148,7 @@ def respond_to_websockets(message):
     }
     if 'answer me in ' in message['text'].lower():
         global max_sentences
-        max_sentences = int(''.join([char for char in message['text'] if char.isdigit()]))
+        max_sentences = int(''.join([char for char in message['text'].lower().split('answer me in ')[1].split(' ')[0] if char.isdigit()]))
         result_message['text'] = 'OK, I will now answer you in a maximum of {} sentences.'.format(max_sentences)
     else:
         result_message['text'] = chatbot_answer(message['text'], max_sentences=max_sentences)
