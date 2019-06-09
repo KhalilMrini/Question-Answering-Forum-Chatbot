@@ -17,5 +17,4 @@ The jupyter notebook file details the process to build the chatbot. The `README`
 After getting the files, run in the `Chatbot` folder:
 
 	pip install -r requirements.txt
-	
-  python manage.py runserver
+	python manage.py runserver
